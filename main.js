@@ -6,7 +6,7 @@ let currentFlag = null;
 let history = [];
 
 let labels = [];
-const threshold = 0.85;
+const threshold = 0.45;
 
 // --------------------
 // Cámara
@@ -121,3 +121,4 @@ async function start() {
 }
 
 start();
+
