@@ -5,7 +5,7 @@ let model;
 let currentFlag = null;
 let history = [];
 
-const labels = ["Mexico", "CoreaSur", "Japon", "Otro"];
+let labels = [];
 const threshold = 0.85;
 
 // --------------------
@@ -27,6 +27,11 @@ async function startCamera() {
 // --------------------
 async function loadModel() {
   model = await tf.loadGraphModel("ml/model.json");
+
+  const metadata = await fetch("ml/metadata.json")
+    .then(res => res.json());
+
+  labels = metadata.labels;
 }
 
 // --------------------
@@ -45,6 +50,8 @@ async function detectFlag() {
     return model.predict(tensor);
   }).data();
 
+  console.log(labels, predictions);
+
   const maxConfidence = Math.max(...predictions);
   const maxIndex = predictions.indexOf(maxConfidence);
   const label = labels[maxIndex];
@@ -61,6 +68,7 @@ async function detectFlag() {
   ) {
     currentFlag = stableLabel;
     showInfo(stableLabel);
+    console.log("Detectado:", label, maxConfidence);
     return; // 👈 evita limpiar en el mismo frame
   }
 
