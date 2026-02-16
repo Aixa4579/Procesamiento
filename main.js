@@ -2,6 +2,7 @@
 
 const video = document.getElementById("camera");
 const info = document.getElementById("info");
+const fact = document.getElementById("fact");
 
 let model;
 let maxPredictions;
@@ -34,12 +35,33 @@ const panel = document.getElementById('create-panel');
 const menu = document.querySelector('.menu');
 const closeBtn = document.getElementById('close-panel');
 
+let cameraStarted = false;
 
-homeBtn.addEventListener('click', () => {
+homeBtn.addEventListener('click', async () => {
   const isActive = scores.classList.toggle('active');
   curiosities.classList.toggle('active');
   rotation.classList.toggle('active');
   info.style.display = isActive ? 'none' : 'block';
+
+  if (isActive && !cameraStarted) {
+    try {
+      await startCamera();
+      video.style.display = "block";
+      cameraStarted = true;
+    } catch (error) {
+      console.error("Error al acceder a la cámara:", error);
+      alert("No se pudo acceder a la cámara.");
+    }
+  }
+
+  if (!isActive && cameraStarted) {
+    const stream = video.srcObject;
+    stream.getTracks().forEach(track => track.stop());
+    video.srcObject = null;
+    video.style.display = "none";
+    cameraStarted = false;
+  }
+
 });
 
 moreBtn.addEventListener('click', (e) => {
@@ -310,23 +332,23 @@ async function predict() {
 function changeInfo(flag) {
   switch (flag) {
     case "Sudafrica":
-      info.textContent = "Sudafrica";
+      fact.textContent = "Sudafrica";
       break;
 
     case "CoreaSur":
-      info.textContent = "Corea del Sur";
+      fact.textContent = "Corea del Sur";
       break;
 
     case "Japon":
-      info.textContent = "Japón";
+      fact.textContent = "Japón";
       break;
 
     case "Otro":
-      info.textContent = "¡Prueba escanear una bandera!";
+      fact.textContent = "¡Prueba escanear una bandera!";
       break;
 
     case "Tunez":
-      info.textContent = "Tunez";
+      fact.textContent = "Tunez";
       break;
   }
 }
@@ -365,7 +387,6 @@ function addToHistory(className) {
 
 
 async function init() {
-  await startCamera();
   await loadModel();
   predict();
 }
