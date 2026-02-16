@@ -10,7 +10,7 @@ const MODEL_URL = "ml/";
 
 let predictionHistory = [];
 const HISTORY_SIZE = 15;
-const CONFIRMATION_RATIO = 0.7;
+const CONFIRMATION_RATIO = 0.8;
 
 let currentFlag = null;
 
@@ -300,7 +300,7 @@ async function predict() {
     }
   }
 
-  if (highest.probability > 0.80) {
+  if (highest.probability > 0.90) {
     addToHistory(highest.className);
   }
 
@@ -371,4 +371,3 @@ async function init() {
 }
 
 init();
-
