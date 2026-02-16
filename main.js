@@ -1,7 +1,19 @@
-// -------------------------------------------------- FUNCIONANDO 
+
 
 const video = document.getElementById("camera");
 const info = document.getElementById("info");
+
+let model;
+let maxPredictions;
+
+const MODEL_URL = "ml/";
+
+let predictionHistory = [];
+const HISTORY_SIZE = 15;
+const CONFIRMATION_RATIO = 0.7;
+
+let currentFlag = null;
+
 
 const homeBtn = document.querySelector('.home');
 const scores = document.querySelector('.scores');
@@ -21,17 +33,6 @@ const createBtn = document.querySelector('.create');
 const panel = document.getElementById('create-panel');
 const menu = document.querySelector('.menu');
 const closeBtn = document.getElementById('close-panel');
-
-
-
-const threshold = 0.85;
-
-let model;
-let currentFlag = null;
-let history = [];
-
-let labels = [];
-
 
 
 homeBtn.addEventListener('click', () => {
@@ -276,93 +277,98 @@ function thermalFilter(temp = 0) {
 
 
 
-
-
-// -------------------------------------------------- FUNCIONANDO 
-
-
-
-
+// Referente al machine learning
 
 async function loadModel() {
-  model = await tf.loadGraphModel("ml/model.json");
+  const modelURL = MODEL_URL + "model.json";
+  const metadataURL = MODEL_URL + "metadata.json";
 
-  const metadata = await fetch("ml/metadata.json")
-    .then(res => res.json());
+  model = await tmImage.load(modelURL, metadataURL);
+  maxPredictions = model.getTotalClasses();
 
-  labels = metadata.labels;
+  console.log("Modelo cargado correctamente");
 }
 
-async function detectFlag() {
-  if (!model || video.readyState !== 4) return;
+async function predict() {
+  const prediction = await model.predict(video);
 
-  const predictions = await tf.tidy(() => {
-    const tensor = tf.browser.fromPixels(video)
-      .resizeNearestNeighbor([224, 224])
-      .toFloat()
-      .div(255)
-      .expandDims();
+  let highest = prediction[0];
 
-    return model.predict(tensor);
-  }).data();
-
-  console.log(labels, predictions);
-
-  const maxConfidence = Math.max(...predictions);
-  const maxIndex = predictions.indexOf(maxConfidence);
-  const label = labels[maxIndex];
-
-  updateHistory(label);
-  const stableLabel = getStableLabel();
-
-  if (
-    stableLabel &&
-    stableLabel !== "Otro" &&
-    maxConfidence >= threshold &&
-    stableLabel !== currentFlag
-  ) {
-    currentFlag = stableLabel;
-    showInfo(stableLabel);
-    console.log("Detectado:", label, maxConfidence);
-    return;
+  for (let i = 1; i < prediction.length; i++) {
+    if (prediction[i].probability > highest.probability) {
+      highest = prediction[i];
+    }
   }
 
-  if (!stableLabel || stableLabel === "Otro") {
-    clearInfo();
+  if (highest.probability > 0.80) {
+    addToHistory(highest.className);
+  }
+
+  requestAnimationFrame(predict);
+}
+
+function changeInfo(flag) {
+  switch (flag) {
+    case "Sudafrica":
+      info.textContent = "Sudafrica";
+      break;
+
+    case "CoreaSur":
+      info.textContent = "Corea del Sur";
+      break;
+
+    case "Japon":
+      info.textContent = "Japón";
+      break;
+
+    case "Otro":
+      info.textContent = "¡Prueba escanear una bandera!";
+      break;
+
+    case "Tunez":
+      info.textContent = "Tunez";
+      break;
   }
 }
 
-function updateHistory(label) {
-  history.push(label);
-  if (history.length > 5) history.shift();
-}
+function addToHistory(className) {
+  predictionHistory.push(className);
 
-function getStableLabel() {
+  if (predictionHistory.length > HISTORY_SIZE) {
+    predictionHistory.shift();
+  }
+
   const counts = {};
-  history.forEach(l => counts[l] = (counts[l] || 0) + 1);
 
-  return Object.keys(counts).find(k => counts[k] >= 3);
+  predictionHistory.forEach(c => {
+    counts[c] = (counts[c] || 0) + 1;
+  });
+
+  let mostCommon = null;
+  let maxCount = 0;
+
+  for (let key in counts) {
+    if (counts[key] > maxCount) {
+      maxCount = counts[key];
+      mostCommon = key;
+    }
+  }
+
+  const ratio = maxCount / predictionHistory.length;
+
+  if (ratio > CONFIRMATION_RATIO && mostCommon !== currentFlag) {
+    currentFlag = mostCommon;
+    changeInfo(currentFlag);
+  }
 }
 
-function showInfo(country) {
-  const data = {
-    Mexico: "México\nCapital: CDMX\nDato: Tiene 68 lenguas indígenas",
-    CoreaSur: "Corea del Sur\nCapital: Seúl\nDato: Tiene uno de los internet más rápidos del mundo",
-    Japon: "Japón\nCapital: Tokio\nDato: Más de 6,800 islas"
-  };
 
-  info.innerText = data[country] || "";
-}
 
-function clearInfo() {
-  currentFlag = null;
-  info.innerText = "Apunta la cámara a una bandera";
-}
-
-async function start() {
+async function init() {
   await startCamera();
   await loadModel();
-  setInterval(detectFlag, 800);
+  predict();
 }
 
-start();
+init();
+
