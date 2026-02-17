@@ -137,6 +137,9 @@ function renderVideoCarousel() {
   container.innerHTML = '';
 
   videos.forEach(video => {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('video-item');
+
     const v = document.createElement('video');
     v.src = video.src;
     v.muted = true;
@@ -144,12 +147,54 @@ function renderVideoCarousel() {
     v.playsInline = true;
 
     v.addEventListener('click', () => {
-      loadFilters(video.src);
+      openPreview(video.src);
     });
 
-    container.appendChild(v);
+    wrapper.appendChild(v);
+    container.appendChild(wrapper);
   });
 }
+
+function openPreview(videoSrc) {
+  const previewContainer = document.getElementById('video-preview-container');
+  const mainVideo = document.getElementById('main-preview');
+  const filtersContainer = document.getElementById('preview-filters');
+
+  previewContainer.classList.remove('preview-hidden');
+
+  mainVideo.src = videoSrc;
+  mainVideo.style.filter = "";
+
+  filtersContainer.innerHTML = "";
+
+  Object.keys(filters).forEach(key => {
+    const btn = document.createElement('button');
+    btn.textContent = filters[key].name;
+    btn.classList.add('btn', 'btn-outline-light', 'm-1');
+
+    btn.onclick = () => applyPreviewFilter(key);
+
+    filtersContainer.appendChild(btn);
+  });
+}
+
+function applyPreviewFilter(key) {
+  const mainVideo = document.getElementById('main-preview');
+  const controls = document.getElementById('preview-controls');
+
+  controls.innerHTML = filters[key].controls;
+
+  const input = controls.querySelector('input');
+
+  mainVideo.style.filter = filters[key].css(input.value);
+
+  input.oninput = e => {
+    const value = e.target.value;
+    mainVideo.style.filter = filters[key].css(value);
+  };
+}
+
+
 
 createBtn.addEventListener('click', () => {
   panel.classList.add('active');
@@ -179,7 +224,7 @@ const filters = {
     css: v => `blur(${v}px)`,
     controls: `
       <label>Nivel de desenfoque&nbsp&nbsp&nbsp</label>
-      <input type="range" min="0" max="10" value="3" data-filter="blur">
+      <input class="Mod-Bar" type="range" min="0" max="10" value="3" data-filter="blur">
     `
   },
   pixel: {
@@ -188,7 +233,7 @@ const filters = {
     extraClass: "pixelated",
     controls: `
       <label>Pixelado&nbsp&nbsp&nbsp</label>
-      <input type="range" min="1" max="10" value="4">
+      <input class="Mod-Bar" type="range" min="1" max="10" value="4">
     `
   },
   thermal: {
@@ -196,15 +241,15 @@ const filters = {
     css: thermalFilter,
     controls: `
       <label>Temperatura&nbsp&nbsp&nbsp</label>
-      <input type="range" min="-100" max="100" value="0" data-filter="thermal">
+      <input class="Mod-Bar" type="range" min="-100" max="100" value="0" data-filter="thermal">
     `
   },
   color: {
-    name: "Ajuste color",
+    name: "Saturación",
     css: v => `saturate(${v}%)`,
     controls: `
       <label>Saturación&nbsp&nbsp&nbsp</label>
-      <input type="range" min="50" max="200" value="120" data-filter="saturate">
+      <input class="Mod-Bar" type="range" min="50" max="200" value="120" data-filter="saturate">
     `
   },
   custom: {
@@ -224,7 +269,7 @@ const filters = {
   },
   controls: `
     <label>Intensidad de suavizado&nbsp&nbsp</label>
-    <input type="range" min="0" max="10" value="3" data-filter="custom">
+    <input class="Mod-Bar" type="range" min="0" max="10" value="3" data-filter="custom">
   `
   }
 };
@@ -276,8 +321,8 @@ function thermalFilter(temp = 0) {
   const isCold = n < 0;
 
   const hue = isCold
-    ? 210 + Math.abs(n) * 30   // azul a violeta
-    : 180 - n * 160;           // amarillo a rojo
+    ? 210 + Math.abs(n) * 30 
+    : 180 - n * 160;         
 
   const saturation = isCold
     ? 160 + Math.abs(n) * 60
@@ -383,8 +428,6 @@ function addToHistory(className) {
     changeInfo(currentFlag);
   }
 }
-
-
 
 async function init() {
   await loadModel();
