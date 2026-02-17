@@ -99,14 +99,12 @@ body {
 
 .info-container {
   position: fixed;
-  top: calc(70px + env(safe-area-inset-top));
+  top: calc(50px + env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
-  
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
-  
   width: 90vw;
   max-width: 1300px;
   z-index: 10;
@@ -498,3 +496,4 @@ body {
     height: 22px;
   }
 }
+
