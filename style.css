@@ -128,6 +128,7 @@ body {
   max-width: 1300px;
   z-index: 10;
   padding: 0 10px;
+  overflow: scroll;
 }
 
 .info {
@@ -515,3 +516,4 @@ body {
     height: 22px;
   }
 }
+
