@@ -1,3 +1,102 @@
+/* General */
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  min-height: 100dvh;
+  background: linear-gradient(90deg, #0d2143, #3c2758);
+}
+
+.fondo-img {
+  position: fixed;
+  inset: 0;
+  background-image: url("img/Fondo\ general2.png");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  z-index: -1;
+  opacity: .3;
+}
+
+@media (max-width: 768px) {
+  body {
+    background: linear-gradient(180deg, #173a78, #5f3d8c);
+  }
+}
+
+.nonedec{
+  text-decoration: none;
+}
+
+.nofond{
+  background-color: transparent;
+}
+
+
+.noborder{
+    border: none;
+}
+
+#camera {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  display: none;
+}
+
+#video-preview-container {
+  margin: 50px;
+  text-align: center;
+}
+
+#main-preview {
+  width: 100%;
+  max-height: 550px;
+  border-radius: 12px;
+}
+
+#preview-filters{
+  margin: 40px auto;
+}
+
+#preview-controls{
+  color: white;
+  font-size: 17px;
+}
+
+.preview-hidden {
+  display: none;
+}
+
+.padtopbot{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+.drag-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.drag-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.drag-scroll:active {
+  cursor: grabbing;
+}
+
+
+/* Mensaje arriba */
+
 .info-container {
   position: fixed;
   top: calc(70px + env(safe-area-inset-top));
@@ -5,7 +104,7 @@
   transform: translateX(-50%);
   
   display: grid;
-  grid-template-columns: 1fr; /* Mobile primero */
+  grid-template-columns: 1fr;
   gap: 20px;
   
   width: 90vw;
@@ -47,5 +146,355 @@
 @media (min-width: 1200px) {
   .info-container {
     column-gap: 110px;
+  }
+}
+
+
+
+/*Menu*/
+.menu{
+  position: fixed;
+  padding-bottom: calc(clamp(8px, 2vh, 14px) + env(safe-area-inset-bottom));
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background: rgba(83, 83, 83, 0.854);
+  backdrop-filter: blur(6px);
+  padding: clamp(8px, 2vh, 10px) 0;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  z-index: 10;
+}
+
+.menu-contenido {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.menu-contenido button {
+  border: none;
+  background-color: transparent;
+}
+
+.menu-contenido svg {
+  width: clamp(25px, 8vw, 48px);
+  height: clamp(25px, 8vw, 48px);
+  color: rgb(221, 221, 221);
+}
+
+.menu-contenido svg:hover {
+  color: rgb(174, 174, 174);
+}
+
+.more {
+  position: relative;
+}
+
+.more-actions {
+  position: fixed;
+  top: calc(20px + env(safe-area-inset-top));
+  right: calc(20px + env(safe-area-inset-right));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px) scale(0.95);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 30;
+}
+
+.more-actions.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.action-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(40, 40, 40, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn svg {
+  color: #ddd;
+}
+
+.action-btn:hover svg {
+  color: white;
+}
+
+
+/*Esto es respecto a lo del panel donde se editan videos*/
+#create-panel {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  width: 100vw;
+  height: 70vh;
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(8px);
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  z-index: 20;
+  transition: bottom 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}
+
+#create-panel::-webkit-scrollbar {
+  display: none;
+}
+
+#create-panel.active {
+  bottom: 0;
+}
+
+/* Oculta el menú principal cuando el panel está activo*/
+.menu.hidden {
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: right;
+  align-items: right;
+  padding: 16px 20px;
+  color: white;
+  font-size: 18px;
+}
+
+.panel-header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+}
+
+.video-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 140px;
+  margin-top: 40px;
+}
+
+.video-cont {
+  margin: 20px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 50px;
+}
+
+.video-cont::-webkit-scrollbar {
+  display: none;
+}
+
+.video-cont video {
+  position: relative;
+  flex-shrink: 0;
+  width: 280px;
+  height: 200px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: black;
+}
+
+.arrow {
+  position: absolute;
+  top: 40%;
+  background: rgba(111, 111, 111, 0.603);
+  border: none;
+  color: white;
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  z-index: 21;
+}
+
+.arrow.left { left: 10px; }
+.arrow.right { right: 10px; }
+
+
+#filter-preview {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 10px 16px;
+}
+
+#filter-preview video {
+  width: 140px;
+  height: 90px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: 2px solid transparent;
+}
+
+#filter-controls {
+  padding: 25px 28px;
+  color: white;
+}
+
+#filter-controls label {
+  font-size: 16px;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}
+
+#preview-filters button{
+  font-size: 17px;
+}
+
+.Mod-Bar{
+  margin: 20px 0px;
+  width: 35%;
+}
+
+.scores {
+  position: fixed;
+  top: calc(30px + env(safe-area-inset-top));
+  left: calc(20px + env(safe-area-inset-left));
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 16px 28px;
+  border-radius: 24px;
+  font-size: clamp(14px, 2.5vw, 16px);
+  line-height: 1.4;
+  max-width: 400px;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.scores.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.scores li {
+  padding-top: 2px;
+}
+
+.scores h2 {
+  padding-bottom: 2px;
+}
+
+.curiosities {
+  position: fixed;
+  right: calc(20px + env(safe-area-inset-right));
+  bottom: calc(clamp(100px, 16vh, 150px) + env(safe-area-inset-bottom));
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 18px 22px;
+  border-radius: 24px;
+  max-width: 280px;
+  z-index: 10;
+  font-size: clamp(14px, 2.5vw, 16px);
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.curiosities.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.rotation-bar {
+  position: fixed;
+  bottom: calc(clamp(50px, 9vh, 100px) + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  padding: 10px 16px;
+  border-radius: 30px;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rotation-bar.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.rotation-bar .label {
+  color: #aaa;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.rotation-bar input[type="range"] {
+  flex: 1;
+  appearance: none;
+  height: 4px;
+  background: #666;
+  border-radius: 2px;
+  outline: none;
+}
+
+.rotation-bar input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #777;
+  border-radius: 2px;
+}
+
+.rotation-bar input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  margin-top: -7px;
+  cursor: pointer;
+}
+
+.rotation-bar input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  border: none;
+}
+
+
+/* Esto es para cuando al celular se le da la vuelta y queda en horizontal*/
+
+@media (orientation: landscape) and (max-height: 450px) {
+  .menu {
+    padding: 6px 0;
+  }
+
+  .menu-contenido svg {
+    width: 22px;
+    height: 22px;
   }
 }
