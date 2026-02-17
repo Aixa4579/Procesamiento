@@ -10,13 +10,32 @@ body {
 .fondo-img {
   position: fixed;
   inset: 0;
-  background-image: url("img/Fondo\ general2.png");
+  background-image: url("img/Fondo\ general.png");
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
   z-index: -1;
   opacity: .3;
 }
+
+.intro {
+  position: fixed;
+  inset: 0;
+  background-image: url("img/Fondo general3.png");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  z-index: 31;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+  cursor: pointer;
+}
+
+.intro.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 @media (max-width: 768px) {
   body {
@@ -99,7 +118,7 @@ body {
 
 .info-container {
   position: fixed;
-  top: calc(20px + env(safe-area-inset-top));
+  top: calc(40px + env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
   display: grid;
@@ -496,5 +515,3 @@ body {
     height: 22px;
   }
 }
-
-
