@@ -1,7 +1,7 @@
 
 
 const video = document.getElementById("camera");
-const info = document.getElementById("info");
+const info = document.querySelectorAll('.info');
 const fact = document.getElementById("fact");
 
 let model;
@@ -41,7 +41,10 @@ homeBtn.addEventListener('click', async () => {
   const isActive = scores.classList.toggle('active');
   curiosities.classList.toggle('active');
   rotation.classList.toggle('active');
-  info.style.display = isActive ? 'none' : 'block';
+  info.forEach(info => {
+    info.style.display = isActive ? 'none' : 'block';
+  });
+
 
   if (isActive && !cameraStarted) {
     try {
@@ -321,8 +324,8 @@ function thermalFilter(temp = 0) {
   const isCold = n < 0;
 
   const hue = isCold
-    ? 210 + Math.abs(n) * 30 
-    : 180 - n * 160;         
+    ? 210 + Math.abs(n) * 30   // azul a violeta
+    : 180 - n * 160;           // amarillo a rojo
 
   const saturation = isCold
     ? 160 + Math.abs(n) * 60
