@@ -99,7 +99,7 @@ body {
 
 .info-container {
   position: fixed;
-  top: calc(50px + env(safe-area-inset-top));
+  top: calc(20px + env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
   display: grid;
@@ -496,4 +496,5 @@ body {
     height: 22px;
   }
 }
+
 
