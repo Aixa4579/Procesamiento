@@ -18,6 +18,11 @@ body {
   opacity: .5;
 }
 
+@media (max-width: 768px) {
+  body {
+    background: linear-gradient(180deg, #173a78, #5f3d8c);
+  }
+}
 
 .nonedec{
   text-decoration: none;
@@ -457,4 +462,5 @@ body {
     height: 22px;
   }
 }
+
 
