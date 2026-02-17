@@ -3,6 +3,7 @@
 const video = document.getElementById("camera");
 const info = document.querySelectorAll('.info');
 const fact = document.getElementById("fact");
+const intro = document.querySelector('.intro');
 
 let model;
 let maxPredictions;
