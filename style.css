@@ -2,21 +2,17 @@
 
 body {
   margin: 0;
-  overflow: hidden;
   font-family: sans-serif;
-  min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(90deg, #173a78, #5f3d8c);
 }
 
 .fondo-img {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 95vh;
+  inset: 0;
   background-image: url("img/Fondo\ general2.png");
   background-repeat: no-repeat;
-  background-position: top;
+  background-position: top center;
   background-size: cover;
   z-index: -1;
   opacity: .5;
@@ -461,3 +457,4 @@ body {
     height: 22px;
   }
 }
+
