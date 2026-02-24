@@ -39,7 +39,7 @@ body {
 
 @media (max-width: 768px) {
   body {
-    background: linear-gradient(180deg,  #060e1e, #1b1128);
+    background: linear-gradient(90deg, #010601b0, #010605b2);
   }
 }
 
@@ -571,4 +571,5 @@ body {
     width: 22px;
     height: 22px;
   }
+
 }
