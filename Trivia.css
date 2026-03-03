@@ -1,0 +1,147 @@
+body {
+  background: linear-gradient(100deg, #021002, #07231c);
+}
+
+.fondo-img {
+  opacity: .1;
+}
+
+.Return-Container {
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  padding: 16px 35px;
+  color: white;
+  font-size: 18px;
+}
+
+.Return-Container button {
+  background: none;
+  border: none;
+  color: rgb(255, 255, 255);
+  font-size: 48px;
+}
+
+.Return-Container button:hover {
+  background: none;
+  border: none;
+  color: rgb(130, 130, 130);
+}
+
+.Trivia-Container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-height: calc(100vh - 180px);
+}
+
+.Trivia-Card {
+  background: rgba(255, 255, 255, 0.888);
+  width: 100%;
+  max-width: 360px;
+  padding: 20px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.Trivia-Header {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.Trivia-Question {
+  font-size: 18px;
+  text-align: center;
+  margin: 25px 0;
+  font-weight: bold;
+}
+
+.Trivia-Image {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 35px;
+}
+
+.Trivia-Image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.Trivia-Options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.Option {
+  background: #161f1638;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.Option:hover {
+  background: #00000068;
+  color: white;
+  transform: scale(1.05);
+}
+
+
+
+
+
+@media (min-width: 768px) {
+  .Trivia-Card {
+    max-width: 600px;
+    padding: 30px;
+  }
+
+  .Trivia-Question {
+    font-size: 22px;
+  }
+
+  .Trivia-Image img {
+    max-width: 260px;
+  }
+
+  .Trivia-Options {
+    gap: 14px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .Trivia-Card {
+    max-width: 900px;
+    padding: 40px;
+  }
+
+  .Trivia-Question {
+    font-size: 26px;
+  }
+
+  .Trivia-Image img {
+    max-width: 320px;
+  }
+
+  .Trivia-Options {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .Option {
+    padding: 16px;
+    font-size: 18px;
+  }
+}
