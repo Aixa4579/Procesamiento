@@ -37,7 +37,9 @@ const videos = [
   { id: 6, src: 'Sudafrica.mp4', title: 'Video 6', flag: "SudAfr" },
   { id: 7, src: 'Tunez.mp4', title: 'Video 7', flag: "Tnz" },
   { id: 8, src: 'Uruguay.mp4', title: 'Video 8', flag: "Urug" },
-  { id: 9, src: 'Uzbekistan.mp4', title: 'Video 9', flag: "Uzbe" }
+  { id: 9, src: 'Uzbekistan.mp4', title: 'Video 9', flag: "Uzbe" },
+  { id: 10, src: 'Mundial1.mp4', title: 'Video 9', flag: "Uzbe" },
+  { id: 11, src: 'Mundial2.mp4', title: 'Video 9', flag: "Colom" }
 ];
 
 const createBtn = document.querySelector('.create');
@@ -719,4 +721,5 @@ async function init() {
 
 init();
 initThree();
+
 
