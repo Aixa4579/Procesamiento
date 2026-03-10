@@ -29,10 +29,15 @@ const moreBtn = document.querySelector('.more');
 const moreActions = document.querySelector('.more-actions');
 
 const videos = [
-  { id: 1, src: 'Mundial1.mp4', title: 'Video 1', flag: "CoreaSur" },
-  { id: 2, src: 'Mundial2.mp4', title: 'Video 2', flag: "Japon" },
-  { id: 3, src: 'Mundial3.mp4', title: 'Video 3', flag: "Sudafrica" },
-  { id: 4, src: 'Mundial4.mp4', title: 'Video 4', flag: "Tunez" }
+  { id: 1, src: 'Colombia.mp4', title: 'Video 1', flag: "Colom" },
+  { id: 2, src: 'CoreaSur.mp4', title: 'Video 2', flag: "CoreaS" },
+  { id: 3, src: 'España.mp4', title: 'Video 3', flag: "Esp" },
+  { id: 4, src: 'Japon.mp4', title: 'Video 4', flag: "Jp" },
+  { id: 5, src: 'Mx.mp4', title: 'Video 5', flag: "Mx" },
+  { id: 6, src: 'Sudafrica.mp4', title: 'Video 6', flag: "SudAfr" },
+  { id: 7, src: 'Tunez.mp4', title: 'Video 7', flag: "Tnz" },
+  { id: 8, src: 'Uruguay.mp4', title: 'Video 8', flag: "Urug" },
+  { id: 9, src: 'Uzbekistan.mp4', title: 'Video 9', flag: "Uzbe" }
 ];
 
 const createBtn = document.querySelector('.create');
@@ -652,6 +657,7 @@ function changeInfo(flag) {
 
     case "SudAfr":
       fact.textContent = "Sudáfrica es el único país del mundo con tres capitales: Ciudad del Cabo, Bloemfontein y Pretoria";
+      loadGLBModel("zorro.glb");
       break;
 
     case "Tnz":
@@ -713,3 +719,4 @@ async function init() {
 
 init();
 initThree();
+
