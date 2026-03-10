@@ -643,6 +643,7 @@ function changeInfo(flag) {
     
     case "CoreaS":
       fact.textContent = "En Corea del Sur, las personas nacen con 1 año de edad y suman un año más cada Año Nuevo lunar";
+      loadGLBModel("MariposaAnimacion.glb");
       break;
 
     case "Esp":
@@ -651,6 +652,7 @@ function changeInfo(flag) {
 
     case "Jp":
       fact.textContent = "Japón es el país con la esperanza de vida más alta del mundo, con una media superior a los 80 años";
+      loadGLBModel("MariposaAnimacion.glb");
       break;
 
     case "Mx":
@@ -673,6 +675,7 @@ function changeInfo(flag) {
 
     case "Uzbe":
       fact.textContent = "Uzbekistán cuenta con la mina de oro de Muruntan, una de las mayores minas a cielo abierto del mundo";
+      loadGLBModel("MariposaAnimacion.glb");
       break;
 
     case "Otro":
@@ -721,6 +724,7 @@ async function init() {
 
 init();
 initThree();
+
 
 
 
