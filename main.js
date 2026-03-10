@@ -130,7 +130,7 @@ function loadGLBModel(path) {
 
     const model = gltf.scene;
 
-    model.scale.set(.25, .25, .25);
+    model.scale.set(.22, .22, .22);
     model.position.set(-0.2, 0, 0);
 
     scene.add(model);
@@ -721,6 +721,7 @@ async function init() {
 
 init();
 initThree();
+
 
 
 
