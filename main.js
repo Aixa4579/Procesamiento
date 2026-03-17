@@ -23,6 +23,8 @@ const scores = document.querySelector('.scores');
 const curiosities = document.querySelector('.curiosities');
 const rotation = document.querySelector('.rotation-bar');
 const replayBtn = document.querySelector('.replay');
+const informationBtn = document.querySelector('.information');
+const infoToggleBtn = document.querySelector('.information button');
 
 const moreBtn = document.querySelector('.more');
 const moreActions = document.querySelector('.more-actions');
@@ -134,6 +136,18 @@ replayBtn.addEventListener('click', () => {
 
   replayBtn.innerHTML = isGLBPlaying ? pauseIcon : playIcon;
 
+});
+
+infoToggleBtn.addEventListener('click', () => {
+  const isVisible = scores.classList.contains('active');
+
+  if (isVisible) {
+    scores.classList.remove('active');
+    curiosities.classList.remove('active');
+  } else {
+    scores.classList.add('active');
+    curiosities.classList.add('active');
+  }
 });
 
 function animate() {
@@ -267,6 +281,7 @@ homeBtn.addEventListener('click', async () => {
   curiosities.classList.toggle('active');
   rotation.classList.toggle('active');
   replayBtn.classList.toggle('active');
+  informationBtn.classList.toggle('active');
   info.forEach(info => {
     info.style.display = isActive ? 'none' : 'block';
   });
