@@ -1,5 +1,3 @@
-
-
 const video = document.getElementById("camera");
 const info = document.querySelectorAll('.info');
 const fact = document.getElementById("fact");
@@ -24,6 +22,7 @@ const homeBtn = document.querySelector('.home');
 const scores = document.querySelector('.scores');
 const curiosities = document.querySelector('.curiosities');
 const rotation = document.querySelector('.rotation-bar');
+const replayBtn = document.querySelector('.replay');
 
 const moreBtn = document.querySelector('.more');
 const moreActions = document.querySelector('.more-actions');
@@ -42,6 +41,32 @@ const videos = [
   { id: 11, src: 'Mundial2.mp4', title: 'Video 9', flag: "Colom" }
 ];
 
+const texturesByCountry = {
+  Colom: "Balones/Colombia.png",
+  CoreaS: "Balones/Corea.png",
+  Esp: "Balones/España.png",
+  Jp: "Balones/Japon.png",
+  Mx: "Balones/Mexico.png",
+  SudAfr: "Balones/Sudafrica.png",
+  Tnz: "Balones/Tunez.png",
+  Urug: "Balones/Uruguay.png",
+  Uzbe: "Balones/Uzbekistan.png"
+};
+
+const playIcon = `
+<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
+</svg>
+`;
+
+const pauseIcon = `
+<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
+</svg>
+`;
+
 const createBtn = document.querySelector('.create');
 const panel = document.getElementById('create-panel');
 const menu = document.querySelector('.menu');
@@ -50,7 +75,11 @@ const closeBtn = document.getElementById('close-panel');
 let cameraStarted = false;
 
 let scene, camera3D, renderer, controls;
+
 let currentModel = null;
+let currentModelOBJ = null;
+let isGLBPlaying = true;
+let isOBJPlaying = true;
 
 function initThree() {
 
@@ -90,17 +119,45 @@ function initThree() {
   animate();
 }
 
+replayBtn.addEventListener('click', () => {
+
+  isGLBPlaying = !isGLBPlaying;
+  isOBJPlaying = !isOBJPlaying;
+
+  if (mixer) {
+    if (isGLBPlaying) {
+      mixer.timeScale = 1;
+    } else {
+      mixer.timeScale = 0;
+    }
+  }
+
+  replayBtn.innerHTML = isGLBPlaying ? pauseIcon : playIcon;
+
+});
+
 function animate() {
   requestAnimationFrame(animate);
 
   const delta = clock.getDelta();
 
-  if (mixer) {
+  if (mixer && isGLBPlaying) {
     mixer.update(delta);
+  }
+
+  if (cameraStarted && currentModelOBJ && isOBJPlaying) {
+    const time = Date.now() * 0.001;
+
+    currentModelOBJ.rotation.y += 0.002;
+
+    const scale = 36 + Math.sin(time) * 1.8;
+    currentModelOBJ.scale.set(scale, scale, scale);
   }
 
   controls.update();
   renderer.render(scene, camera3D);
+
+  renderer.renderLists.dispose();
 }
 
 let mixer;
@@ -112,7 +169,7 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-function loadGLBModel(path) {
+function loadGLBModel(path, scale) {
 
   const loader = new THREE.GLTFLoader();
 
@@ -130,7 +187,7 @@ function loadGLBModel(path) {
 
     const model = gltf.scene;
 
-    model.scale.set(.22, .22, .22);
+    model.scale.set(scale, scale, scale);
     model.position.set(-0.2, 0, 0);
 
     scene.add(model);
@@ -147,6 +204,55 @@ function loadGLBModel(path) {
   });
 }
 
+function loadOBJModel(path, texturePath) {
+
+  const objLoader = new THREE.OBJLoader();
+  const textureLoader = new THREE.TextureLoader();
+
+  if (currentModelOBJ) {
+    scene.remove(currentModelOBJ);
+    currentModelOBJ = null;
+  }
+
+  const texture = textureLoader.load(texturePath);
+
+  objLoader.load(path, function (object) {
+
+    object.traverse(function (child) {
+      if (child.isMesh) {
+        child.material.map = texture;
+        child.material.transparent = true;
+        child.material.opacity = 0.5;
+        child.material.needsUpdate = true;
+      }
+    });
+
+    object.scale.set(38, 38, 38);
+    object.position.set(-0.5, -22, -25); 
+
+    scene.add(object);
+    currentModelOBJ = object;
+
+  });
+}
+
+function clearModels() {
+  if (currentModel) {
+    scene.remove(currentModel);
+    currentModel = null;
+  }
+
+  if (currentModelOBJ) {
+    scene.remove(currentModelOBJ);
+    currentModelOBJ = null;
+  }
+
+  if (mixer) {
+    mixer.stopAllAction();
+    mixer = null;
+  }
+}
+
 const rotationInput = document.querySelector(".rotation-bar input");
 
 rotationInput.addEventListener("input", (e) => {
@@ -160,6 +266,7 @@ homeBtn.addEventListener('click', async () => {
   const isActive = scores.classList.toggle('active');
   curiosities.classList.toggle('active');
   rotation.classList.toggle('active');
+  replayBtn.classList.toggle('active');
   info.forEach(info => {
     info.style.display = isActive ? 'none' : 'block';
   });
@@ -182,6 +289,8 @@ homeBtn.addEventListener('click', async () => {
     video.srcObject = null;
     video.style.display = "none";
     cameraStarted = false;
+
+    clearModels();
   }
 
 });
@@ -636,51 +745,67 @@ async function predict() {
 }
 
 function changeInfo(flag) {
+
+  if (!cameraStarted) return;
+
   switch (flag) {
     case "Colom":
       fact.textContent = "Colombia es el hogar de la mayor diversidad de aves del mundo";
+      loadGLBModel("zorro.glb", .22);
+      loadOBJModel("Balon.obj", texturesByCountry["Colom"]);
       break;
     
     case "CoreaS":
       fact.textContent = "En Corea del Sur, las personas nacen con 1 año de edad y suman un año más cada Año Nuevo lunar";
-      loadGLBModel("MariposaAnimacion.glb");
+      loadGLBModel("MariposaAnimacion.glb", .12);
+      loadOBJModel("Balon.obj", texturesByCountry["CoreaS"]);
       break;
 
     case "Esp":
       fact.textContent = "España, ademas del español, tiene tres lenguas cooficiales: catalán, gallego y euskera";
+      loadGLBModel("TIGREAnimatic.glb", .45);
+      loadOBJModel("Balon.obj", texturesByCountry["Esp"]);
       break;
 
     case "Jp":
       fact.textContent = "Japón es el país con la esperanza de vida más alta del mundo, con una media superior a los 80 años";
-      loadGLBModel("MariposaAnimacion.glb");
+      loadGLBModel("MariposaAnimacion.glb", .12);
+      loadOBJModel("Balon.obj", texturesByCountry["Jp"]);
       break;
 
     case "Mx":
       fact.textContent = "En México aunque el español es predominante, se hablan 68 lenguas indígenas nacionales";
+      loadGLBModel("zorro.glb", .22);
+      loadOBJModel("Balon.obj", texturesByCountry["Mx"]);
       break;
 
     case "SudAfr":
       fact.textContent = "Sudáfrica es el único país del mundo con tres capitales: Ciudad del Cabo, Bloemfontein y Pretoria";
-      loadGLBModel("zorro.glb");
+      loadGLBModel("GACELAAnimatic.glb", .2);
+      loadOBJModel("Balon.obj", texturesByCountry["SudAfr"]);
       break;
 
     case "Tnz":
       fact.textContent = "En Túnez, el desierto del Sahara cubre cerca del 40% del territorio";
-      loadGLBModel("zorro.glb");
+      loadGLBModel("GACELAAnimatic.glb", .2);
+      loadOBJModel("Balon.obj", texturesByCountry["Tnz"]);
       break;
 
     case "Urug":
       fact.textContent = "Uruguay fue sede y ganador de la primera Copa del Mundo de la FIFA en 1930";
+      loadGLBModel("zorro.glb", .22);
+      loadOBJModel("Balon.obj", texturesByCountry["Urug"]);
       break;
 
     case "Uzbe":
       fact.textContent = "Uzbekistán cuenta con la mina de oro de Muruntan, una de las mayores minas a cielo abierto del mundo";
-      loadGLBModel("MariposaAnimacion.glb");
+      loadGLBModel("MariposaAnimacion.glb", .12);
+      loadOBJModel("Balon.obj", texturesByCountry["Uzbe"]);
       break;
 
     case "Otro":
       fact.textContent = "¡Prueba escanear una bandera!";
-      if (currentModel) scene.remove(currentModel);
+      clearModels();
       break;
   }
 }
@@ -724,9 +849,3 @@ async function init() {
 
 init();
 initThree();
-
-
-
-
-
-
