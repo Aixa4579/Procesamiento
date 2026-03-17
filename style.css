@@ -266,6 +266,24 @@ body {
   color: #0000009b;
 }
 
+.replay {
+  position: fixed;
+  bottom: calc(clamp(120px, 14vh, 160px) + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: transparent;
+  border: none;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.replay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 
 /*Esto es respecto a lo del panel donde se editan videos*/
 #create-panel {
