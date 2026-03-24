@@ -39,8 +39,9 @@ const videos = [
   { id: 7, src: 'Tunez.mp4', title: 'Video 7', flag: "Tnz" },
   { id: 8, src: 'Uruguay.mp4', title: 'Video 8', flag: "Urug" },
   { id: 9, src: 'Uzbekistan.mp4', title: 'Video 9', flag: "Uzbe" },
-  { id: 10, src: 'Mundial1.mp4', title: 'Video 9', flag: "Uzbe" },
-  { id: 11, src: 'Mundial2.mp4', title: 'Video 9', flag: "Colom" }
+  { id: 10, src: 'Mundial1.mp4', title: 'Video 10', flag: "Din" },
+  { id: 11, src: 'Mundial2.mp4', title: 'Video 11', flag: "Jam" },
+  { id: 12, src: 'Mundial3.mp4', title: 'Video 12', flag: "Alb" }
 ];
 
 const texturesByCountry = {
@@ -52,7 +53,10 @@ const texturesByCountry = {
   SudAfr: "Balones/Sudafrica.png",
   Tnz: "Balones/Tunez.png",
   Urug: "Balones/Uruguay.png",
-  Uzbe: "Balones/Uzbekistan.png"
+  Uzbe: "Balones/Uzbekistan.png",
+  Din: "Balones/Dinamarca.png",
+  Jam: "Balones/Jamaica.png",
+  Alb: "Balones/Albania.png"
 };
 
 const playIcon = `
@@ -821,6 +825,24 @@ function changeInfo(flag) {
     case "Otro":
       fact.textContent = "¡Prueba escanear una bandera!";
       clearModels();
+      break;
+
+    case "Din":
+      fact.textContent = "Dinamarca tiene la monarquía ininterrumpida más antigua de Europa";
+      loadGLBModel("TIGREAnimatic.glb", .45);
+      loadOBJModel("Balon.obj", texturesByCountry["Din"]);
+      break;
+
+    case "Jam":
+      fact.textContent = "El reggae nació en Jamaica, con Bob Marley como su máximo exponente";
+      loadGLBModel("zorro.glb", .22);
+      loadOBJModel("Balon.obj", texturesByCountry["Jam"]);
+      break;
+
+    case "Alb":
+      fact.textContent = "Albania posee el lago Ohrid, que es el mas antiguo de Europa";
+      loadGLBModel("TIGREAnimatic.glb", .45);
+      loadOBJModel("Balon.obj", texturesByCountry["Alb"]);
       break;
   }
 }
