@@ -240,7 +240,7 @@ function loadOBJModel(path, texturePath) {
       if (child.isMesh) {
         child.material.map = texture;
         child.material.transparent = true;
-        child.material.opacity = 0.5;
+        child.material.opacity = 0.8;
         child.material.needsUpdate = true;
       }
     });
